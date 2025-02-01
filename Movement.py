@@ -237,4 +237,85 @@ class Movement:
                 break;
 
         return possible_moves
-   
+
+    # knight movement: L-shape
+    def knight_moves(self, h, w):
+        possible_moves = []
+
+        # List of positions the knight can move to
+        knight_moves_list = [
+            (h-2, w-1), (h-2, w+1),
+            (h-1, w-2), (h-1, w+2),
+            (h+1, w-2), (h+1, w+2),
+            (h+2, w-1), (h+2, w+1)
+        ]
+
+        # Check if each move is within board limits (0 <= h, w < 8)
+        for move in knight_moves_list:
+            nh, nw = move
+            if 0 <= nh < 8 and 0 <= nw < 8:
+                if self.board[nh][nw] == ' ' or not self.checkifSameColor(h,w,nh,nw):
+                    possible_moves.append((nh, nw))
+
+        return possible_moves
+
+    def pawn_moves(self, h, w):
+        possible_moves = []
+        Pawn_moves_kill_list_p1 = [
+            (h-1, w-1),(h-1, w+1)
+        ]
+
+        Pawn_moves_kill_list_p2 = [
+            (h+1, w+1),(h+1, w-1)
+        ]
+        # p1
+        if self.board[h][w] == 'P':
+            if self.board[h + 1][w] == ' ':
+                if h == 1:
+                    possible_moves.append((h + 2, w))
+                possible_moves.append((h + 1, w))
+
+            for move in Pawn_moves_kill_list_p1:
+                nh, nw = move
+                if 0 <= nh < 8 and 0 <= nw < 8:
+                    if not self.checkifSameColor(h,w,nh,nw):
+                        possible_moves.append((nh, nw))
+
+
+        # p2
+        if self.board[h][w] == 'p':
+            if self.board[h - 1][w] == ' ':
+                if h == 6:
+                    possible_moves.append((h - 2, w))
+                possible_moves.append((h - 1, w))
+
+            for move in Pawn_moves_kill_list_p2:
+                nh, nw = move
+                if 0 <= nh < 8 and 0 <= nw < 8:
+                    if not self.checkifSameColor(h,w,nh,nw):
+                        possible_moves.append((nh, nw))
+
+        # change to queen logic
+
+        # Kill Logic
+
+        return possible_moves;
+    def king_moves(self, h, w):
+        possible_moves = []
+        king_moves = [
+            # Vertical and Horizontal:
+            (h-1, w),(h+1, w),
+            (h, w-1),(h, w+1),
+
+            # Diagonal:
+            (h+1, w+1),(h+1, w-1),
+            (h-1, w+1),(h-1, w-1),
+        ]
+
+        for move in king_moves:
+            nh, nw = move
+            if 0 <= nh < 8 and 0 <= nw < 8:
+                if not self.checkifSameColor(h,w,nh,nw):
+                    possible_moves.append((nh, nw))
+        return possible_moves
+
