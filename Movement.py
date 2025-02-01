@@ -4,30 +4,87 @@ class Movement:
     def __init__(self, chessboard):
         self.board = chessboard
 
-    # Queen Movement: Diagonal, Vertical, Horizontal
+    def checkifSameColor(self, h1, w1, h2, w2):
+        if self.board[h1][w1].isupper() == self.board[h2][w2].isupper():
+            return True;
+        else:
+            return False;
+
+    # Definitely needs refactoring
     def queen_moves(self, h, w):
         possible_moves = []
-
         # Vertical and Horizontal Movement
+        i = -8;
         for i in range(8):
-            if i != h:
-                possible_moves.append((i, w))
-            if i != w:
-                possible_moves.append((h, i))
+            if  i != w:  # Avoid current position
+                # Vertical movement
+                if self.checkifSameColor(h, w, i, w):
+                    if self.board[i][w] == ' ' or not checkifSameColor(h, w, i, w):
+                        # Deploy empty position
+                        self.board[h][w] == ' '
+                        # Move Queen
+                        possible_moves.append((i, w))
+                    else:
+                        break
 
-                # Diagonal Movement
-        for i in range(0, 8):
-            if h + i < 8 and w + i < 8:
-                possible_moves.append((h + i, w + i))  # Top-right diagonal
-            if h - i >= 0 and w - i >= 0:
-                possible_moves.append((h - i, w - i))  # Bottom-left diagonal
-            if h + i < 8 and w - i >= 0:
-                possible_moves.append((h + i, w - i))  # Top-left diagonal
-            if h - i >= 0 and w + i < 8:
-                possible_moves.append((h - i, w + i))  # Bottom-right diagonal
+        i = -8;
+        for i in range(8):
+            if  i != w:  # Avoid current position
+                # Horizontal movement
+                if self.checkifSameColor(h, w, h, i):
+                    if self.board[h][i] == ' ' or not checkifSameColor(h, w, h, i):
+                        # Deploy empty position
+                        self.board[h][w] == ' '
+                        # Move Queen
+                        possible_moves.append((h,i))
+                    else:
+                        break
 
-        # Kill Logic (Except for K)
+        for i in range(-8,8):
+            if  i != w and i != h:
+                # Top-right diagonal
+                if h - i >= 0 and w + i < 8:
+                    if self.board[h - i][w + i] == ' ' or not self.checkifSameColor(h, w, h - i, w + i):
+                        possible_moves.append((h - i, w + i))  # Add move
+                    if self.board[h - i][w + i] != ' ':
+                        if not self.checkifSameColor(h, w, h - i, w + i):  # Capture opponent's piece
+                            possible_moves.append((h - i, w + i))
+                        break  # Stop if there's a piece in the way
+
+        for i in range(-8,8):
+            if  i != w and i != h:
+                # Bottom-left diagonal
+                if h + i < 8 and w - i >= 0:
+                    if self.board[h + i][w - i] == ' ' or not self.checkifSameColor(h, w, h + i, w - i):
+                        possible_moves.append((h + i, w - i))  # Add move
+                    if self.board[h + i][w - i] != ' ':
+                        if not self.checkifSameColor(h, w, h + i, w - i):  # Capture opponent's piece
+                            possible_moves.append((h + i, w - i))
+                        break  # Stop if there's a piece in the way
+
+        for i in range(-8, 8):
+            if  i != w and i != h:
+                # Top-left diagonal
+                if h - i >= 0 and w - i >= 0:
+                    if self.board[h - i][w - i] == ' ' or not self.checkifSameColor(h, w, h - i, w - i):
+                        possible_moves.append((h - i, w - i))  # Add move
+                    if self.board[h - i][w - i] != ' ':
+                        if not self.checkifSameColor(h, w, h - i, w - i):  # Capture opponent's piece
+                            possible_moves.append((h - i, w - i))
+                        break  # Stop if there's a piece in the way
+        for i in range(8):
+            if  i != w and i != h:
+                # Bottom-right diagonal
+                if h + i < 8 and w + i < 8:
+                    if self.board[h + i][w + i] == ' ' or not self.checkifSameColor(h, w, h + i, w + i):
+                        possible_moves.append((h + i, w + i))  # Add move
+                    if self.board[h + i][w + i] != ' ':
+                        if not self.checkifSameColor(h, w, h + i, w + i):  # Capture opponent's piece
+                            possible_moves.append((h + i, w + i))
+                        break  # Stop if there's a piece in the way
+
         return possible_moves
+
 
     # knight movement: L-shape
     def knight_moves(self, h, w):
@@ -50,6 +107,7 @@ class Movement:
         # Kill Logic (Except for K)
         return possible_moves
 
+    # bishop movement
     def bishop_moves(self, h, w):
         possible_moves = []
         # Diagonal Movement
@@ -78,6 +136,7 @@ class Movement:
         # Kill Logic (Except for K)
         return possible_moves
 
+
     def pawn_moves(self, h, w):
         possible_moves = []
         # first 2 move for pawn p1
@@ -98,6 +157,7 @@ class Movement:
         # Kill Logic (Except for K)
 
         return possible_moves;
+
 
     def king_moves(self, h, w):
         possible_moves = []
